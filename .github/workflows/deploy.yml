@@ -1,0 +1,36 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches:
+      - main  # Trigger the pipeline on changes to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: true
+        tags: gahana15/weddingplanner:latest
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        kubectl-version: 'latest'
+
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f deployment.yaml
+        kubectl apply -f service.yaml
+      env:
+        KUBECONFIG: ${{ secrets.KUBECONFIG }}
