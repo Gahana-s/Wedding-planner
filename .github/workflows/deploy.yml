@@ -22,15 +22,20 @@ jobs:
         context: .
         push: true
         tags: gahana15/weddingplanner:latest
+      env:
+        DOCKER_BUILDKIT: 1
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+        DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
     - name: Set up kubectl
       uses: azure/setup-kubectl@v1
       with:
         kubectl-version: 'latest'
 
+    - name: Decode KUBECONFIG
+      run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+
     - name: Deploy to Kubernetes
       run: |
         kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
-      env:
-        KUBECONFIG: ${{ secrets.KUBECONFIG }}
