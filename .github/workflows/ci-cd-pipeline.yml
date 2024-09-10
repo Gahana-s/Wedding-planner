@@ -31,8 +31,8 @@ jobs:
       # Step 4: Build and push the Docker image to Docker Hub
       - name: Build and push Docker image
         run: |
-          docker build -t your-dockerhub-username/wedding-planner:latest .
-          docker push your-dockerhub-username/wedding-planner:latest
+          docker build -t gahana15/wedding-planner:latest .
+          docker push gahana15/wedding-planner:latest
 
       # Step 5: Set up Kubernetes CLI (kubectl)
       - name: Set up kubectl
