@@ -1,20 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: weddingplanner-deployment
+  name: wedding-planner-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: weddingplanner
+      app: wedding-planner
   template:
     metadata:
       labels:
-        app: weddingplanner
+        app: wedding-planner
     spec:
       containers:
-      - name: weddingplanner
-        image: gahana15/weddingplanner:latest
+      - name: wedding-planner-container
+        image: gahana15/wedding-planner:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 80
 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wedding-planner-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: wedding-planner
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
